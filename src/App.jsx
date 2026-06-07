@@ -38,7 +38,8 @@ function getRiskType(weakPoints) {
   if (!weakPoints || weakPoints.length === 0) {
     return { emoji:"🌱", name:"安心維持型" };
   }
-  const top = weakPoints[0]?.name || "";
+
+  const top = weakPoints[0]?.label || weakPoints[0]?.name || "";
 
   if (top.includes("災害") || top.includes("浸水") || top.includes("避難")) {
     return { emoji:"🌊", name:"災害脆弱型" };
@@ -52,6 +53,7 @@ function getRiskType(weakPoints) {
   if (top.includes("人口") || top.includes("地域")) {
     return { emoji:"📉", name:"人口減少リスク型" };
   }
+
   return { emoji:"🛣️", name:"インフラ依存型" };
 }
 
@@ -223,7 +225,7 @@ function DiagnosticApp({ config, onBack, onSelect }) {
   // 弱点TOP3：スコアの低い問いを特定
   const riskType = getRiskType(weakPoints);
 
-  const weakPoints = questions
+        const weakPoints = questions
     .map(q => ({ q, score: answers[q.id]??0, max: Math.max(...q.options.map(o=>o.score)) }))
     .filter(item => item.score < item.max)
     .sort((a,b) => (a.score/a.max) - (b.score/b.max))
